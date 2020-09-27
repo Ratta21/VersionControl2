@@ -66,13 +66,11 @@ namespace UserMaintenance
 
         private void button3_Click(object sender, EventArgs e)
         {
-            foreach (var user in users)
+            IReadOnlyList<User> usersToRemove = users.Where(x => (x.FullName == listBox1.GetItemText(listBox1.SelectedItem))).ToList();
+            foreach (var item in usersToRemove)
             {
-                if (listBox1.GetItemText(listBox1.SelectedItem) == user.FullName)
-                {
-                    users.Remove(user);
-                }
+                users.Remove(item);
             }
         }
+        }
     }
-}
