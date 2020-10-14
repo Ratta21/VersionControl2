@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Webszolgáltatás.MnbServiceReference;
 
 namespace Webszolgáltatás
 {
@@ -15,6 +16,27 @@ namespace Webszolgáltatás
         public Form1()
         {
             InitializeComponent();
+            var mnbService = new MNBArfolyamServiceSoapClient();
+
+            var request = new GetExchangeRatesRequestBody()
+            {
+                currencyNames = "EUR",
+                startDate = "2020-01-01",
+                endDate = "2020-06-30"
+            };
+
+            // Ebben az esetben a "var" a GetExchangeRates visszatérési értékéből kapja a típusát.
+            // Ezért a response változó valójában GetExchangeRatesResponseBody típusú.
+            var response = mnbService.GetExchangeRates(request);
+
+            // Ebben az esetben a "var" a GetExchangeRatesResult property alapján kapja a típusát.
+            // Ezért a result változó valójában string típusú.
+            var result = response.GetExchangeRatesResult;
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
