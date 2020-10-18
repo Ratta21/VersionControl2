@@ -14,9 +14,12 @@ using Webszolgáltatás.MnbServiceReference;
 
 namespace Webszolgáltatás
 {
+
+    
     public partial class Form1 : Form
     {
         BindingList<RateData> Rates = new BindingList<RateData>();
+        BindingList<string> Currencies = new BindingList<string>();
 
         public Form1()
         {
@@ -38,13 +41,50 @@ namespace Webszolgáltatás
             // Ebben az esetben a "var" a GetExchangeRatesResult property alapján kapja a típusát.
             // Ezért a result változó valójában string típusú.
             var result2 = response.GetExchangeRatesResult;
+            //Nem értem mit jelent a kiszervezés :(
+            comboBox1.DataSource = Currencies;
+
+            var request_A = new GetCurrenciesRequestBody();
+
+            var response_A = mnbService.GetCurrencies(request_A);
+
+            var result_A = response.GetCurrenciesResult;
             XMLfeldog(result2);
+            XMLfeldog2(result_A);
             adatok();
 
 
         }
 
         private void XMLfeldog(string result)
+        {
+            // XML document létrehozása és az aktuális XML szöveg betöltése
+            var xml = new XmlDocument();
+            xml.LoadXml(result);
+
+            // Végigmegünk a dokumentum fő elemének gyermekein
+            foreach (XmlElement element in xml.DocumentElement)
+            {
+                // Létrehozzuk az adatsort és rögtön hozzáadjuk a listához
+                // Mivel ez egy referencia típusú változó, megtehetjük, hogy előbb adjuk a listához és csak később töltjük fel a tulajdonságait
+                var rate = new RateData();
+                Rates.Add(rate);
+
+                // Dátum
+                rate.Date = DateTime.Parse(element.GetAttribute("date"));
+
+                // Valuta
+                var childElement = (XmlElement)element.ChildNodes[0];
+                rate.Currency = childElement.GetAttribute("curr");
+
+                // Érték
+                var unit = decimal.Parse(childElement.GetAttribute("unit"));
+                var value = decimal.Parse(childElement.InnerText);
+                if (unit != 0)
+                    rate.Value = value / unit;
+            }
+        }
+        private void XMLfeldog2(string result)
         {
             // XML document létrehozása és az aktuális XML szöveg betöltése
             var xml = new XmlDocument();
