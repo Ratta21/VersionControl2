@@ -30,7 +30,6 @@ namespace mikroszim
                     population.Add(new Person()
                     {
                         BirthYear = int.Parse(line[0]),
-                        Gender = (Gender)Enum.Parse(typeof(Gender), line[1]),
                         NbrOfChildren = int.Parse(line[2])
                     });
                 }
@@ -38,9 +37,54 @@ namespace mikroszim
 
             return population;
         }
+
+        public List<BirthProbability> GetBirthProbabilities(string csvpath)
+        {
+            List<BirthProbability> birthprobabilities = new List<BirthProbability>();
+
+            using (StreamReader sr = new StreamReader(csvpath, Encoding.Default))
+            {
+                while (!sr.EndOfStream)
+                {
+                    var line = sr.ReadLine().Split(';');
+                    birthprobabilities.Add(new BirthProbability()
+                    {
+                        age = int.Parse(line[0]),
+                        kidcount = byte.Parse(line[1]),
+                        P = double.Parse(line[2])
+                    });
+                }
+            }
+
+            return birthprobabilities;
+        }
+
+        public List<DeathProbability> GetDeathProbabilities(string csvpath)
+        {
+            List<DeathProbability> deathprobabilities = new List<DeathProbability>();
+
+            using (StreamReader sr = new StreamReader(csvpath, Encoding.Default))
+            {
+                while (!sr.EndOfStream)
+                {
+                    var line = sr.ReadLine().Split(';');
+                    deathprobabilities.Add(new DeathProbability()
+                    {
+                        kor = int.Parse(line[0]),
+                        Gender = (Gender)Enum.Parse(typeof(Gender), line[1]),
+                        P = double.Parse(line[2])
+                    });
+                }
+            }
+
+            return deathprobabilities;
+        }
         public Form1()
         {
             InitializeComponent();
+            Population = GetPopulation(@"C:\Temp\nép.csv");
+            BirthProbabilities = GetBirthProbabilities(@"C:\Temp\születés.csv");
+            DeathProbabilities = GetDeathProbabilities(@"C:\Temp\halál.csv");
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace mikroszim.Entities
 {
-    class BirthProbability
+    public class BirthProbability
     {
 
         public int age { get; set; }
