@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Futoszalag.Abstractions;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Windows.Forms;
 
 namespace Futoszalag.Entities
 {
-    public class Ball : Label
+    public class Ball : Toy
     {
         public Ball()
         {
