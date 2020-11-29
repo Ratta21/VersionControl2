@@ -16,6 +16,8 @@ namespace WHG
     {
         GameController gc = new GameController();
         GameArea ga;
+        Brain winnerBrain = null;
+
 
         int populationSize = 100;
         int nbrOfSteps = 10;
@@ -54,6 +56,16 @@ namespace WHG
             var topPerformers = playerList.Take(populationSize / 2).ToList();
 
 
+            var winners = from p in topPerformers
+                          where p.IsWinner
+                          select p;
+            if (winners.Count() > 0)
+            {
+                winnerBrain = winners.FirstOrDefault().Brain.Clone();
+                gc.GameOver -= Gc_GameOver;
+                return;
+            }
+
             generation++;
             label1.Text = string.Format(
                 "{0}. generáció",
@@ -79,6 +91,15 @@ namespace WHG
         private void Form1_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            gc.ResetCurrentLevel();
+            gc.AddPlayer(winnerBrain.Clone());
+            gc.AddPlayer();
+            ga.Focus();
+            gc.Start(true);
         }
     }
 }
